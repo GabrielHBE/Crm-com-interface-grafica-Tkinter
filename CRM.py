@@ -939,23 +939,6 @@ def VendasNoMes(aba):
     texto_compra2 = Label(aba,textvariable=compra2,font=('Arial',15))
     texto_compra2.pack(side=LEFT,anchor=N,padx=80,pady=20)
 
-
-
-def ListaDeClientes(aba,nome):
-
-    lista_com_clientes = []
-    lista_de_botoes = []
-
-    for i in lista_clientes:
-
-        if nome in i.nome:
-            lista_com_clientes.append(i)
-
-    for i in lista_com_clientes:
-
-        botao = Button(aba,text=f'Cliente: {i.nome}. CPF: {i.cpf}. Telefone: {i.telefone}. CEP: {i.cep}')
-        lista_de_botoes.append(botao)
-
 #Função para chamar as respectivas funções
 def nova_Aba(tipo,cliente=None):
 
