@@ -1,16 +1,22 @@
 import mysql.connector
 from mysql.connector import Error
 
+from dotenv import load_dotenv
+import os
+
 def AdicionarCliente(nome,telefone,cpf,endereco,cep,aniversario):
 
     global connection
 
     try:
+
+        load_dotenv()
+
         connection = mysql.connector.connect(
-            host='----',
-            database='-----',
-            user='-----',
-            password='-----'
+            host = os.getenv('HOST'),
+            database = os.getenv('DATABASE'),
+            user = os.getenv('USER'),
+            password = os.getenv('PASSWORD')
         )
 
         if connection.is_connected():
@@ -33,11 +39,14 @@ def RemoverCLiente(nome):
 
     global connection
     try:
+
+        load_dotenv()
+
         connection = mysql.connector.connect(
-            host='----',
-            database='----',
-            user='----',
-            password='----'
+            host = os.getenv('HOST'),
+            database = os.getenv('DATABASE'),
+            user = os.getenv('USER'),
+            password = os.getenv('PASSWORD')
         )
 
         if connection.is_connected():
@@ -68,11 +77,14 @@ def AdicionarVenda(cliente,produto,qnt,consideracoes,dataPedido,dataEntrega,valo
     global connection
 
     try:
+
+        load_dotenv()
+
         connection = mysql.connector.connect(
-            host='----',
-            database='----',
-            user='----',
-            password='----'
+            host = os.getenv('HOST'),
+            database = os.getenv('DATABASE'),
+            user = os.getenv('USER'),
+            password = os.getenv('PASSWORD')
         )
 
         if connection.is_connected():
@@ -95,11 +107,14 @@ def AdicionarVenda(cliente,produto,qnt,consideracoes,dataPedido,dataEntrega,valo
 def AtualizarQntPedidos(valor,qnt,nome):
 
     try:
+
+        load_dotenv()
+
         connection = mysql.connector.connect(
-            host='----',
-            database='----',
-            user='----',
-            password='----'
+            host = os.getenv('HOST'),
+            database = os.getenv('DATABASE'),
+            user = os.getenv('USER'),
+            password = os.getenv('PASSWORD')
         )
 
         if connection.is_connected():
@@ -127,11 +142,14 @@ def AlterarCliente(tipo,dadoNovo,nome):
     dadoNovo = str(dadoNovo)
 
     try:
+
+        load_dotenv()
+
         connection = mysql.connector.connect(
-            host='----',
-            database='----',
-            user='----',
-            password='----'
+            host = os.getenv('HOST'),
+            database = os.getenv('DATABASE'),
+            user = os.getenv('USER'),
+            password = os.getenv('PASSWORD')
         )
 
         if connection.is_connected():
