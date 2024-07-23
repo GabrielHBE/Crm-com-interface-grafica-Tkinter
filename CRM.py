@@ -5,6 +5,9 @@ from tkcalendar import *
 from datetime import datetime
 import babel.numbers
 
+from dotenv import load_dotenv
+import os
+
 #Inicialização das classes
 from classes import Clientes,Venda
 
@@ -37,14 +40,17 @@ consideracao = None
 
 ja_tem_consideracao = 0 
 
-def IniciarClientes():
+def IniciarValores():
+
+    load_dotenv()
 
     try:
+
         connection = mysql.connector.connect(
-            host='-----',
-            database='-----',
-            user='-----',
-            password='-----'
+            host = os.getenv("HOST"),
+            database = os.getenv("DATABASE"),
+            user = os.getenv("USER"),
+            password = os.getenv("PASSWORD")
         )
 
         if connection.is_connected():
@@ -65,26 +71,6 @@ def IniciarClientes():
                         valor = 0.0
  
                     lista_clientes.append(Clientes(nome, telefone, cpf, endereco, valor, qntPedidos, cep, aniversario))
-
-    except:
-        pass
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-
-def IniciarVendas():    
-
-    try:
-        connection = mysql.connector.connect(
-            host='-----',
-            database='-----',
-            user='-----',
-            password='-----'
-        )
-
-        if connection.is_connected():
-            cursor = connection.cursor()
 
             cursor.execute("SELECT * FROM vendas")
             if cursor.with_rows: 
@@ -301,7 +287,6 @@ def CadastrarVenda(aba,cliente_ja_colocado):
 
         texto_cliente_nao_encontrado = Label(aba,text='',font=('Arial',15))
         texto_cliente_nao_encontrado .place(x=200,y=40)
-
 
         dataEntrega = calendario.get_date()
         frete = entrada_frete.get()
@@ -530,36 +515,16 @@ def MostrarCliente(aba, nome):
             index = int(val)
             
             try:
-
-                conteudo = '\n'.join(compras_do_cliente[index].produto)
-
-                texto_cliente = f'Valor total do pedido: {compras_do_cliente[index].valor}\n' +\
-                                f'Valor do frete: {compras_do_cliente[index].frete}\n' +\
-                                f'Quantidade total pedido: {compras_do_cliente[index].qnt}\n'+\
-                                f'Data do pedido: {compras_do_cliente[index].dataPedido}\n'+\
-                                f'Data de entrega do pedido: {compras_do_cliente[index].dataEntrega}\n'+\
-                                f'Considerações: {compras_do_cliente[index].consideracoes}\n'+\
-                                f'Produtos comprados: \n{conteudo}'
                 
-                compra1.set(texto_cliente)
+                compra1.set(compras_do_cliente[index])
 
             except:
 
                 compra1.set('')
 
             try:
-
-                conteudo = '\n'.join(compras_do_cliente[index+1].produto)
-
-                texto_cliente = f'Valor total do pedido: {compras_do_cliente[index+1].valor}\n' +\
-                                f'Valor do frete: {compras_do_cliente[index].frete}\n' +\
-                                f'Quantidade total pedido: {compras_do_cliente[index+1].qnt}\n'+\
-                                f'Data do pedido: {compras_do_cliente[index+1].dataPedido}\n'+\
-                                f'Data de entrega do pedido: {compras_do_cliente[index+1].dataEntrega}\n'+\
-                                f'Considerações: {compras_do_cliente[index+1].consideracoes}\n'+\
-                                f'Produtos comprados: \n{conteudo}'
                 
-                compra2.set(texto_cliente)
+                compra2.set(compras_do_cliente[index+1])
 
             except:
 
@@ -580,31 +545,14 @@ def MostrarCliente(aba, nome):
                 texto_informacoes_pessoais = Label(aba, text='Informações pessoais:', font=('Arial', 15, 'bold'))
                 texto_informacoes_pessoais.pack(anchor=W)
 
-                texto_nome = Label(aba, text=f'Nome: {j.nome}  /  CPF: {j.cpf}', font=('Arial', 15))
-                texto_nome.pack(anchor=W)
-                texto_aniversario = Label(aba, text=f'Aniversário: {j.aniversario}', font=('Arial', 15))
-                texto_aniversario.pack(anchor=W)
-                texto_telefone = Label(aba, text=f'Telefone: {j.telefone}', font=('Arial', 15))
-                texto_telefone.pack(anchor=W)
-                texto_endereco = Label(aba, text=f'Endereço: {j.endereco}  /  CEP: {j.cep}', font=('Arial', 15))
-                texto_endereco.pack(anchor=W)
+                texto_dados_pessoais = Label(aba, text=j, font=('Arial', 15))
+                texto_dados_pessoais.pack(anchor=W)
 
         texto_informacoes_de_compras = Label(aba, text='Compras realizadas:', font=('Arial', 15, 'bold'))
         texto_informacoes_de_compras.pack(anchor=W)
 
-        try:
-
-            conteudo = '\n'.join(compras_do_cliente[0].produto)
-
-            texto_cliente = f'Valor total comprado: {compras_do_cliente[0].valor}\n' +\
-                            f'Valor do frete: {compras_do_cliente[0].frete}\n' +\
-                            f'Quantidade total pedido: {compras_do_cliente[0].qnt}\n'+\
-                            f'Data do pedido: {compras_do_cliente[0].dataPedido}\n'+\
-                            f'Data de entrega do pedido: {compras_do_cliente[0].dataEntrega}\n'+\
-                            f'Considerações: {compras_do_cliente[0].consideracoes}\n'+\
-                            f'Produtos comprados: \n{conteudo}'
-            
-            compra1.set(texto_cliente)
+        try:       
+            compra1.set(compras_do_cliente[0])
 
         except:
 
@@ -612,22 +560,11 @@ def MostrarCliente(aba, nome):
 
         try:
 
-            conteudo = '\n'.join(compras_do_cliente[1].produto)
-
-            texto_cliente = f'Valor total comprado: {compras_do_cliente[1].valor}\n' +\
-                            f'Valor do frete: {compras_do_cliente[1].frete}\n' +\
-                            f'Quantidade total pedido: {compras_do_cliente[1].qnt}\n'+\
-                            f'Data do pedido: {compras_do_cliente[1].dataPedido}\n'+\
-                            f'Data de entrega do pedido: {compras_do_cliente[1].dataEntrega}\n'+\
-                            f'Considerações: {compras_do_cliente[1].consideracoes}\n'+\
-                            f'Produtos comprados: \n{conteudo}'
-            
-            compra2.set(texto_cliente)
+            compra2.set(compras_do_cliente[1])
 
         except:
 
             compra2.set('')
-
 
         texto_compra1 = Label(aba,textvariable=compra1,font=('Arial',15))
         texto_compra1.pack(side=LEFT,anchor=N,padx=80,pady=20)
@@ -647,6 +584,7 @@ def MostrarCliente(aba, nome):
     for i in lista_clientes:
         if nome in i.nome:
             lista_nome_clientes.append(i)
+
 
     if len(lista_nome_clientes) ==0:
         texto_sem_cliente = Label(aba,text='Nenhum cliente com esse nome!',font=('Arial',15))
@@ -1089,8 +1027,7 @@ def Aniversario():
     return retornar
 
 #Main
-IniciarClientes()
-IniciarVendas()
+IniciarValores()
 
 cliente = Aniversario()
 
