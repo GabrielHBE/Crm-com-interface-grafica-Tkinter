@@ -6,8 +6,6 @@ import os
 
 def AdicionarCliente(nome,telefone,cpf,endereco,cep,aniversario):
 
-    global connection
-
     try:
 
         load_dotenv()
@@ -37,7 +35,6 @@ def AdicionarCliente(nome,telefone,cpf,endereco,cep,aniversario):
 
 def RemoverCLiente(nome):
 
-    global connection
     try:
 
         load_dotenv()
@@ -73,8 +70,6 @@ def RemoverCLiente(nome):
 def AdicionarVenda(cliente,produto,qnt,consideracoes,dataPedido,dataEntrega,valor):
 
     produto = '/'.join(produto)
-
-    global connection
 
     try:
 
