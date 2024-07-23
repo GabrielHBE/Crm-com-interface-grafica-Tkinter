@@ -41,10 +41,10 @@ def IniciarClientes():
 
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            database='mae',
-            user='root',
-            password='Ynos2021'
+            host='-----',
+            database='-----',
+            user='-----',
+            password='-----'
         )
 
         if connection.is_connected():
@@ -77,10 +77,10 @@ def IniciarVendas():
 
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            database='mae',
-            user='root',
-            password='Ynos2021'
+            host='-----',
+            database='-----',
+            user='-----',
+            password='-----'
         )
 
         if connection.is_connected():
