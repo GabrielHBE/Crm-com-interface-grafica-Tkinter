@@ -100,6 +100,7 @@ def IniciarValores():
             cursor.close()
             connection.close()
 
+
 def FecharAba(frames):
 
     global notebook
@@ -161,10 +162,11 @@ def CadastrarCliente(aba):
 
             lista_clientes.append(Clientes(nome=nome,telefone=telefone,cpf=cpf,endereco=endereco,cep=cep,aniversario=aniversario))
             texto_ja_tem.config(text='                                                                                  ')
+
             result = AdicionarCliente(nome,telefone,cpf,endereco,cep,aniversario)
             texto_erro =  Label(aba,text=result,font=('Arial',15))
             texto_erro.place(x=700,y=400)
-            
+
         entrada_nome.delete(0,END)
         entrada_numero.delete(0,END)
         entrada_cpf.delete(0,END)
@@ -205,7 +207,6 @@ def CadastrarCliente(aba):
     botao_cadastrar = Button(abas[qntAbas],text='Cadastrar',command= submit,font=('Arial',15))
     botao_cadastrar.pack(anchor=W,side=BOTTOM)
 
-
 #Fução para remover o cadastro
 def RemoverCadastro(aba,nome_cliente):
     
@@ -227,9 +228,11 @@ def RemoverCadastro(aba,nome_cliente):
 
                 nome = i.nome
                 entrada_nome.delete(0,END)
+                
                 erro = RemoverCLiente(nome)
                 texto_erro = Label(aba,text=erro,font=('Arial',15))
                 texto_erro.pack(side=BOTTOM,anchor=N)
+
                 encontrado=1
 
                 for j in lista_vendas:
@@ -353,13 +356,11 @@ def CadastrarVenda(aba,cliente_ja_colocado):
                     if i.nome == nome:
                         i.valor+=valor
                         i.qntPedidos+=1
+
                         AtualizarQntPedidos(i.valor,i.qntPedidos,i.nome)
 
                 result = AdicionarVenda(nome,produto,quantidade_produtos,c,dataPedido,dataEntrega,valor)
-
-                texto_erro = Label(aba,text=result,font=('Arial',15))
-                texto_erro.place(x=400,y=750)
-
+                texto_erro = Label(aba,text=result,font=('Arial',15)        )
 
                 #deletando os itens para adicionar mais
                 entrada_de_produtos.delete(0,END)
@@ -388,7 +389,7 @@ def CadastrarVenda(aba,cliente_ja_colocado):
             nome = nome.replace('\n','')
         qnt = int(entrada_quantidade_de_produtos.get())
     
-        produto.append(f'Produto {nome}, Quantidade: {qnt}')
+        produto.append(f'Produto: {nome}, Quantidade: {qnt}')
 
         conteudo = '\n'.join(produto)
         texto_produtos_adicionados.config(text=conteudo)
@@ -490,6 +491,9 @@ def MostrarCliente(aba, nome):
 
     lista_nome_clientes.clear()
     lista_de_botoes.clear()
+
+    def PedidoEntregue(posicao):
+        pass
         
     def exibir(nome_cliente):
 
@@ -499,6 +503,7 @@ def MostrarCliente(aba, nome):
             j.destroy()
 
         compras_do_cliente = []
+        lista_botoes_pedidos_entregues = []
 
         compra1 = StringVar()
         compra2 = StringVar()
@@ -506,6 +511,12 @@ def MostrarCliente(aba, nome):
         for i in lista_vendas:
             if i.cliente == nome_cliente:
                 compras_do_cliente.append(i)
+                if i.entregue == False or i.entregue == None:
+                    botao_entregue = Button(aba,text='Pedido entregue',command=PedidoEntregue)
+                    lista_botoes_pedidos_entregues.append(botao_entregue)
+                else:
+                    lista_botoes_pedidos_entregues.append('')
+
 
         compras_do_cliente = sorted(compras_do_cliente, key=lambda data: data.dataPedido)
 
@@ -567,10 +578,10 @@ def MostrarCliente(aba, nome):
             compra2.set('')
 
         texto_compra1 = Label(aba,textvariable=compra1,font=('Arial',15))
-        texto_compra1.pack(side=LEFT,anchor=N,padx=80,pady=20)
+        texto_compra1.pack(side=LEFT,anchor=N,padx=50,pady=20)
 
         texto_compra2 = Label(aba,textvariable=compra2,font=('Arial',15))
-        texto_compra2.pack(side=LEFT,anchor=N,padx=80,pady=20)
+        texto_compra2.pack(side=LEFT,anchor=N,padx=50,pady=20)
 
         scale = Scale(aba, from_=0, to=len(compras_do_cliente)-1, orient=HORIZONTAL, command=atualizarVlores,length=600)
         scale.place(x=500,y=700)
@@ -595,6 +606,9 @@ def MostrarCliente(aba, nome):
         botao = Button(aba, text=f'Nome: {i.nome} / CPF: {i.cpf} / Telefone: {i.telefone} / CEP: {i.cep}', command=lambda nome=i.nome: exibir(nome),font=('Arial',15))
         botao.pack(pady=5)
         lista_de_botoes.append(botao)
+
+    if len(lista_nome_clientes)==1:
+        exibir(lista_nome_clientes[0].nome)
 
 
 def VerClientes(aba):
@@ -701,14 +715,14 @@ def AlterarCadastro(aba,cliente=None):
                         novo_valor =novo_valor.lower()
                         posicao.endereco = novo_valor
 
-                    result = AlterarCliente(tipo,novo_valor, nome)
 
                     confirmacao = Label(aba,text=f'O {tipo} do cliente {nome} foi alterado',font=('Arial',15))
                     confirmacao.pack(anchor=W)
-
+                
+                    result = AlterarCliente(tipo,novo_valor, nome)
                     texto_result = Label(aba,text=result,font=('Arial',15))
                     texto_result.pack(anchor=W)
-
+                    
 
         tipo = selecionar_opcoes.get()
 
@@ -914,7 +928,6 @@ def VendasNoMes(aba):
 
         else:
             texto_sem_cliente.config(text='Nenhuma venda realizada nesse mês!')
-            
 
     opcoes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
     
@@ -938,6 +951,37 @@ def VendasNoMes(aba):
 
     texto_compra2 = Label(aba,textvariable=compra2,font=('Arial',15))
     texto_compra2.pack(side=LEFT,anchor=N,padx=80,pady=20)
+
+
+def MostrarTodosClientes(aba):
+
+    def mudar(val):
+
+        index = int(val)
+
+        for i in range(len(lista[index-1])):
+            lista[index-1][i].pack_forget()
+
+        for i in lista[index]:
+            i.pack(pady=5)
+
+    botoes = []
+
+    lista_ordenada = sorted(lista_clientes,key=lambda clientes: clientes.nome)
+
+    for i in lista_ordenada:
+
+        botao = Button(aba, text=f'Nome: {i.nome} / CPF: {i.cpf} / Telefone: {i.telefone} / CEP: {i.cep}', command=lambda nome=i.nome: nova_Aba(tipo='Pesquisar',cliente=nome),font=('Arial',15))
+        botoes.append(botao)
+
+    lista = [botoes[i:i + 12] for i in range(0,len(botoes),12)]
+
+    for i in lista[0]:
+        i.pack(pady=5)
+
+    scale = Scale(aba,from_=0,to=len(lista)-1,orient=HORIZONTAL,command=mudar,length=600)
+    scale.place(x=500,y=700)
+    
 
 #Função para chamar as respectivas funções
 def nova_Aba(tipo,cliente=None):
@@ -968,7 +1012,11 @@ def nova_Aba(tipo,cliente=None):
         AlterarCadastro(abas[qntAbas],cliente)
 
     elif tipo == 'Pesquisar':
-        nome_cliente = barra_de_pesquisa.get()
+
+        if cliente == None:
+            nome_cliente = barra_de_pesquisa.get()
+        else:
+            nome_cliente = cliente
         barra_de_pesquisa.delete(0,END)
         notebook.add(abas[qntAbas],text=f'{nome_cliente}')
         MostrarCliente(abas[qntAbas],nome_cliente)
@@ -989,6 +1037,10 @@ def nova_Aba(tipo,cliente=None):
         notebook.add(abas[qntAbas],text=f'Aniversário')
         texto_aniversario = Label(abas[qntAbas],text=f'Hoje é aniversário de: \n{cliente}',font=('Arial',15))
         texto_aniversario.pack()
+
+    elif tipo == 'VerTodosClientes':
+        notebook.add(abas[qntAbas],text='Clientes Cadastrados')
+        MostrarTodosClientes(abas[qntAbas])
 
     notebook.place(x=350,y=100,width=1557,height=900)
     qntAbas+=1
@@ -1049,6 +1101,9 @@ botao_cadastro_de_vendas.place(x=10,y=400)
 
 botao_cadastro_de_vendas = Button(janela,text='Ver vendas feitas no mês',font=('Arial',15),command= lambda: nova_Aba('VendasMes'))
 botao_cadastro_de_vendas.place(x=10,y=450)
+
+botao_ver_todos_clientes = Button(janela,text='Ver todos os clientes',font=('Arial',15),command= lambda: nova_Aba('VerTodosClientes'))
+botao_ver_todos_clientes.place(x=10,y=500)
 
 if cliente != '':
     nova_Aba('Aniversario',cliente)
